@@ -1,0 +1,73 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  fullName        String
+  phoneNumber     String?
+  country         String
+  balance         BigInt         @default(0)
+  referralCode    String         @unique
+  referredById    String?
+  referredBy      User?          @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals       User[]         @relation("UserReferrals")
+  userTasks       UserTask[]
+  payoutRequests  PayoutRequest[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Task {
+  id             String     @id @default(uuid())
+  title          String
+  description    String
+  type           String     // SURVEY, AD, APP_INSTALL, REFERRAL, OTHER
+  rewardAmount   BigInt
+  maxCompletions Int?
+  status         String     @default("ACTIVE")
+  providerConfig String?    // JSON string
+  userTasks      UserTask[]
+  createdAt      DateTime   @default(now())
+}
+
+model UserTask {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  taskId        String
+  task          Task           @relation(fields: [taskId], references: [id])
+  status        String         @default("STARTED") // STARTED, PENDING, COMPLETED, REJECTED
+  rewardPaid    BigInt?
+  evidenceData  String?        // JSON string
+  completedAt   DateTime?
+}
+
+model PayoutRequest {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  amount        BigInt
+  method        String       // MPESA, UPI, GCASH, AIRTIME, BANK, USDT
+  destination   String
+  status        String       @default("PENDING") // PENDING, PROCESSING, SUCCESS, FAILED
+  gatewayTxId   String?
+  fee           BigInt
+  createdAt     DateTime     @default(now())
+  processedAt   DateTime?
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  userId    String?
+  event     String
+  metadata  String?  // JSON string
+  timestamp DateTime @default(now())
+}
