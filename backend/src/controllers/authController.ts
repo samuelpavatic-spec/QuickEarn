@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { 
   hashPassword, 
@@ -6,7 +6,7 @@ import {
   generateAccessToken, 
   generateRefreshToken,
   verifyRefreshToken
-} from '../utils/auth';
+} from '../utils/auth.js';
 
 const prisma = new PrismaClient();
 

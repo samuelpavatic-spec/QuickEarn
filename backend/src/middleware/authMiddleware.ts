@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { verifyAccessToken } from '../utils/auth';
+import type { Request, Response, NextFunction } from 'express';
+import { verifyAccessToken } from '../utils/auth.js';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
