@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, ActivityIndicator, Alert, TextInput } from 'react-native';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getTaskDetails, startTask, submitTask } from './api';
 import { COLORS, TYPOGRAPHY } from '../../components/design-system/Theme';
@@ -13,6 +13,7 @@ type Props = NativeStackScreenProps<TasksStackParamList, 'TaskDetails'>;
 const TaskDetailsScreen = ({ route, navigation }: Props) => {
   const { taskId } = route.params;
   const [isStarted, setIsStarted] = useState(false);
+  const [evidence, setEvidence] = useState('');
 
   const { data: task, isLoading } = useQuery({
     queryKey: ['task', taskId],
@@ -31,7 +32,7 @@ const TaskDetailsScreen = ({ route, navigation }: Props) => {
   });
 
   const submitMutation = useMutation({
-    mutationFn: () => submitTask(taskId, { completed: true }),
+    mutationFn: () => submitTask(taskId, { completed: true, evidence }),
     onSuccess: () => {
       Alert.alert('Success', 'Task submitted successfully!', [
         { text: 'OK', onPress: () => navigation.goBack() }
@@ -72,6 +73,20 @@ const TaskDetailsScreen = ({ route, navigation }: Props) => {
           </Text>
         </QuickCard>
 
+        {isStarted && (
+          <View className="mb-8">
+            <Text style={TYPOGRAPHY.h2} className="mb-4">Submit Evidence</Text>
+            <TextInput
+              className="border border-gray-200 rounded-2xl p-4 bg-gray-50 h-32 text-gray-900"
+              placeholder="Enter completion details, promo code, or confirmation text..."
+              multiline
+              textAlignVertical="top"
+              value={evidence}
+              onChangeText={setEvidence}
+            />
+          </View>
+        )}
+
         {!isStarted ? (
           <QuickButton
             title="Start Task"
@@ -83,7 +98,7 @@ const TaskDetailsScreen = ({ route, navigation }: Props) => {
           <QuickButton
             title="Submit Completion"
             onPress={() => submitMutation.mutate()}
-            disabled={submitMutation.isPending}
+            disabled={submitMutation.isPending || !evidence.trim()}
             style={{ height: 56, borderRadius: 16 }}
           />
         )}
