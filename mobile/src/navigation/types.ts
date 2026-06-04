@@ -9,8 +9,13 @@ export type AuthStackParamList = {
   Register: undefined;
 };
 
+export type TasksStackParamList = {
+  TaskList: undefined;
+  TaskDetails: { taskId: string };
+};
+
 export type MainTabParamList = {
-  Tasks: undefined;
+  Tasks: undefined; // This will point to TasksStack
   Wallet: undefined;
   Referrals: undefined;
   Profile: undefined;
