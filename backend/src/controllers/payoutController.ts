@@ -4,14 +4,32 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const getPayoutMethods = async (req: Request, res: Response) => {
-  // Static for now, could be in DB
-  res.json([
-    { id: 'MPESA', name: 'M-Pesa', fee: '500000' },
-    { id: 'UPI', name: 'UPI', fee: '250000' },
-    { id: 'GCASH', name: 'GCash', fee: '250000' },
-    { id: 'USDT', name: 'USDT (TRC-20)', fee: '1000000' },
-    { id: 'BANK', name: 'Bank Transfer', fee: '2000000' },
-  ]);
+  const { country } = req.query;
+  
+  // Base list of all methods
+  const allMethods = [
+    { id: 'PAYPAL', name: 'PayPal', fee: '1000000', countries: ['US', 'GB', 'CA', 'BR', 'IN', 'NG', 'PH'] },
+    { id: 'MPESA', name: 'M-Pesa', fee: '500000', countries: ['KE', 'TZ', 'UG', 'GH'] },
+    { id: 'UPI', name: 'UPI', fee: '250000', countries: ['IN'] },
+    { id: 'GCASH', name: 'GCash', fee: '250000', countries: ['PH'] },
+    { id: 'AIRTIME', name: 'Airtime Top-up', fee: '100000', countries: ['KE', 'NG', 'IN', 'BR', 'PH'] },
+    { id: 'BANK', name: 'Bank Transfer', fee: '2000000', countries: ['US', 'GB', 'CA', 'BR', 'IN', 'NG', 'PH', 'KE'] },
+    { id: 'USDT', name: 'USDT (TRC-20)', fee: '1000000', countries: [] }, // Global
+    { id: 'AMAZON_GIFT', name: 'Amazon Gift Card', fee: '0', countries: ['US', 'GB', 'CA', 'BR', 'IN'] },
+    { id: 'NETFLIX_GIFT', name: 'Netflix Gift Card', fee: '0', countries: ['US', 'GB', 'CA', 'BR', 'IN'] },
+    { id: 'SPOTIFY_GIFT', name: 'Spotify Gift Card', fee: '0', countries: ['US', 'GB', 'CA', 'BR', 'IN'] },
+    { id: 'VISA_PREPAID', name: 'Visa Prepaid Card', fee: '2000000', countries: ['US', 'GB', 'CA', 'BR', 'IN', 'NG', 'PH'] },
+    { id: 'MINECRAFT_HOSTING', name: 'Minecraft Server Hosting', fee: '0', countries: [] }, // Global
+  ];
+
+  let filteredMethods = allMethods;
+  if (country) {
+    filteredMethods = allMethods.filter(m => 
+      m.countries.length === 0 || m.countries.includes(country as string)
+    );
+  }
+
+  res.json(filteredMethods.map(({ countries, ...rest }) => rest));
 };
 
 export const requestPayout = async (req: Request, res: Response) => {

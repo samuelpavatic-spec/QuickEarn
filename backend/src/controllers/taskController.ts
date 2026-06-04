@@ -5,8 +5,13 @@ const prisma = new PrismaClient();
 
 export const listTasks = async (req: Request, res: Response) => {
   try {
+    const { type } = req.query;
+    const where: any = { status: 'ACTIVE' };
+    if (type) {
+      where.type = type as string;
+    }
     const tasks = await prisma.task.findMany({
-      where: { status: 'ACTIVE' }
+      where
     });
     res.json(tasks.map(t => ({ ...t, rewardAmount: t.rewardAmount.toString() })));
   } catch (error) {
