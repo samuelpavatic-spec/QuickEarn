@@ -3,5 +3,5 @@ nohup: ignoring input
 > backend@1.0.0 dev
 > tsx src/index.ts
 
-◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
 Server listening on port 3000

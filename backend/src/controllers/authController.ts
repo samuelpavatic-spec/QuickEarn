@@ -7,6 +7,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken
 } from '../utils/auth.js';
+import { logEvent } from '../utils/analytics.js';
 
 const prisma = new PrismaClient();
 
@@ -37,6 +38,8 @@ export const register = async (req: Request, res: Response) => {
         referredById: referredBy ? referredBy.id : null,
       },
     });
+
+    await logEvent('USER_REGISTERED', user.id, { country });
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
@@ -73,6 +76,8 @@ export const login = async (req: Request, res: Response) => {
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
+
+    await logEvent('USER_LOGIN', user.id);
 
     res.json({
       user: {

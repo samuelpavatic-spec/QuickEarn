@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { logEvent } from '../utils/analytics.js';
 
 const prisma = new PrismaClient();
 
@@ -51,6 +52,8 @@ export const startTask = async (req: Request, res: Response) => {
       }
     });
 
+    await logEvent('TASK_STARTED', userId, { taskId });
+
     res.status(201).json(userTask);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
@@ -78,6 +81,8 @@ export const submitTask = async (req: Request, res: Response) => {
         evidenceData: JSON.stringify(evidenceData),
       }
     });
+
+    await logEvent('TASK_SUBMITTED', userId, { taskId });
 
     res.json(updated);
   } catch (error) {

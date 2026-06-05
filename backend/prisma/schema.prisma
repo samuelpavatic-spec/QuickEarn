@@ -21,6 +21,7 @@ model User {
   referrals       User[]         @relation("UserReferrals")
   userTasks       UserTask[]
   payoutRequests  PayoutRequest[]
+  isAdmin         Boolean        @default(false)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 }
@@ -60,6 +61,7 @@ model PayoutRequest {
   status        String       @default("PENDING") // PENDING, PROCESSING, SUCCESS, FAILED
   gatewayTxId   String?
   fee           BigInt
+  metadata      String?      // JSON string for specific payout details
   createdAt     DateTime     @default(now())
   processedAt   DateTime?
 }
