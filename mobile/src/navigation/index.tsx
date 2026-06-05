@@ -10,32 +10,10 @@ import TasksScreen from '../features/tasks/TasksScreen';
 import TaskDetailsScreen from '../features/tasks/TaskDetailsScreen';
 import WalletScreen from '../features/wallet/WalletScreen';
 import ReferralsScreen from '../features/referrals/ReferralsScreen';
+import ProfileScreen from '../features/profile/ProfileScreen';
 import useAuthStore from '../store/useAuthStore';
 import { ClipboardList, Wallet, Users, User } from 'lucide-react-native';
 import { COLORS } from '../components/design-system/Theme';
-
-// Placeholder profile screen
-import { View, Text } from 'react-native';
-const ProfileScreen = () => {
-  const logout = useAuthStore(state => state.logout);
-  const user = useAuthStore(state => state.user);
-  return (
-    <View className="flex-1 items-center justify-center bg-white px-6">
-      <View className="w-24 h-24 bg-gray-100 rounded-full items-center justify-center mb-4">
-        <User size={48} color="#9CA3AF" />
-      </View>
-      <Text className="text-2xl font-bold text-gray-900 mb-1">{user?.fullName}</Text>
-      <Text className="text-gray-500 mb-8">{user?.email}</Text>
-      
-      <TouchableOpacity 
-        onPress={logout}
-        className="bg-red-50 w-full py-4 rounded-xl items-center"
-      >
-        <Text className="text-red-600 font-bold">Logout</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const AuthNavigator = () => (
@@ -78,8 +56,6 @@ const MainTabs = () => (
 );
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-import { TouchableOpacity } from 'react-native';
 
 export const Navigation = () => {
   const token = useAuthStore((state) => state.token);
