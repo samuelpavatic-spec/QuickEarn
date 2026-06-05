@@ -26,7 +26,9 @@ export const getPayoutMethods = async (req: Request, res: Response) => {
       fee: '0', 
       countries: [],
       config: {
-        providers: ['Shockbyte', 'PebbleHost', 'Apex', 'BisectHosting'],
+        providers: ['Shockbyte', 'PebbleHost', 'Apex Hosting', 'BisectHosting'],
+        ramRange: { min: 1, max: 8 },
+        durationRange: { min: 1, max: 6 },
         basePricePerGB: 2500000, // $2.50 per GB
         pricePerMod: 100000, // $0.10 per mod
         pricePerAddon: 500000, // $0.50 per addon
@@ -40,7 +42,8 @@ export const getPayoutMethods = async (req: Request, res: Response) => {
       organizations: [
         { id: 'HOSPITAL_A', name: 'City Children\'s Hospital' },
         { id: 'CANCER_ORG_B', name: 'Global Cancer Foundation' },
-        { id: 'RED_CROSS', name: 'International Red Cross' }
+        { id: 'RED_CROSS', name: 'International Red Cross' },
+        { id: 'ST_JUDE', name: 'St. Jude Children\'s Research Hospital' }
       ]
     }
   ];
@@ -107,7 +110,8 @@ export const requestPayout = async (req: Request, res: Response) => {
           destination,
           fee,
           status: 'PENDING',
-          metadata: metadata ? JSON.stringify(metadata) : null
+          metadata: metadata ? JSON.stringify(metadata) : null,
+          minecraftHostingConfig: method === 'MINECRAFT_HOSTING' ? JSON.stringify(metadata) : null
         }
       });
 

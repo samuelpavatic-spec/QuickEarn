@@ -7,6 +7,7 @@ async function seed() {
   await prisma.userTask.deleteMany();
   await prisma.payoutRequest.deleteMany();
   await prisma.task.deleteMany();
+  await prisma.globalConfig.deleteMany();
   
   console.log('Seeding tasks...');
   await prisma.task.createMany({
@@ -37,6 +38,20 @@ async function seed() {
       }
     ]
   });
+
+  console.log('Seeding global config...');
+  await prisma.globalConfig.create({
+    data: {
+      key: 'charities_list',
+      value: JSON.stringify([
+        { id: 'HOSPITAL_A', name: 'City Children\'s Hospital' },
+        { id: 'CANCER_ORG_B', name: 'Global Cancer Foundation' },
+        { id: 'RED_CROSS', name: 'International Red Cross' },
+        { id: 'ST_JUDE', name: 'St. Jude Children\'s Research Hospital' }
+      ])
+    }
+  });
+
   console.log('Database seeded successfully.');
 }
 

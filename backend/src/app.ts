@@ -4,6 +4,7 @@ import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import payoutRoutes from './routes/payoutRoutes.js';
 import referralRoutes from './routes/referralRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 
 dotenv.config();
 
@@ -19,5 +20,6 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/payouts', payoutRoutes);
 app.use('/api/v1/referrals', referralRoutes);
+app.use('/api/v1/config', configRoutes);
 
 export default app;

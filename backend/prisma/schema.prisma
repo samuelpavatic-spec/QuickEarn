@@ -56,14 +56,15 @@ model PayoutRequest {
   userId        String
   user          User         @relation(fields: [userId], references: [id])
   amount        BigInt
-  method        String       // MPESA, UPI, GCASH, AIRTIME, BANK, USDT
+  method                 String       // MPESA, UPI, GCASH, AIRTIME, BANK, USDT, PAYPAL, AMAZON_GIFT, NETFLIX_GIFT, SPOTIFY_GIFT, VISA_PREPAID, MINECRAFT_HOSTING, CHARITY_DONATION
   destination   String
-  status        String       @default("PENDING") // PENDING, PROCESSING, SUCCESS, FAILED
-  gatewayTxId   String?
-  fee           BigInt
-  metadata      String?      // JSON string for specific payout details
-  createdAt     DateTime     @default(now())
-  processedAt   DateTime?
+  status                 String       @default("PENDING") // PENDING, PROCESSING, SUCCESS, FAILED
+  gatewayTxId            String?
+  fee                    BigInt
+  metadata               String?      // JSON string for specific payout details
+  minecraftHostingConfig String?      // JSON string for server specs
+  createdAt              DateTime     @default(now())
+  processedAt            DateTime?
 }
 
 model AnalyticsEvent {
@@ -72,4 +73,9 @@ model AnalyticsEvent {
   event     String
   metadata  String?  // JSON string
   timestamp DateTime @default(now())
+}
+
+model GlobalConfig {
+  key   String @id
+  value String // JSON string
 }
